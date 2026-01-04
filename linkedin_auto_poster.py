@@ -79,7 +79,7 @@ Do not use emojis. Write the post directly without any meta-commentary or explan
         print(f"\nGenerated post:\n{post_content}\n")
         return post_content
 
-    def generate_image_prompts(self, topic, count=3):
+    def generate_image_prompts(self, topic, count=1):
         """Generate multiple varied image description prompts for the topic"""
         prompts = []
 
