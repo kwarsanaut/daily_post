@@ -3,7 +3,7 @@ name: Daily LinkedIn Post
 on:
   schedule:
     # Runs every day at 9:00 AM UTC (adjust timezone as needed)
-    - cron: '0 9 * * *'
+    - cron: '0 2 * * *'
   workflow_dispatch: # Allows manual triggering for testing
 
 jobs:
