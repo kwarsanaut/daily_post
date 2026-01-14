@@ -19,60 +19,82 @@ class LinkedInAutoPoster:
 
     def search_trending_topics(self):
         """Search for trending data science topics"""
-        # Using multiple sources for diverse topics
         topics_sources = [
-            "Latest breakthroughs in machine learning",
-            "Data science best practices and tips",
-            "AI and ethics in 2026",
-            "Python data science libraries and tools",
-            "Real-world applications of AI",
-            "Career advice for data scientists",
-            "Data visualization techniques",
-            "Big data and cloud computing trends",
-            "Natural language processing advancements",
-            "Computer vision and image recognition",
-            "Deep learning architectures",
-            "MLOps and model deployment",
-            "Data engineering pipelines",
-            "Statistical modeling techniques",
-            "AI in healthcare and medicine",
-            "Generative AI applications",
-            "Time series forecasting methods",
-            "A/B testing and experimentation",
-            "Feature engineering strategies",
-            "Data science interview preparation"
+            # Practical Daily Work (40%)
+            "SQL query optimization tips yang sering dilupakan",
+            "Debugging ETL pipeline yang error di production",
+            "Excel vs Python untuk data analysis - kapan pakai mana",
+            "Cara presentasi data ke non-technical stakeholder",
+            "Dashboard design mistakes yang sering terjadi",
+            "Data cleaning tricks yang save waktu",
+            "Git workflow untuk data team",
+            "Dokumentasi data pipeline yang baik",
+            
+            # Career & Soft Skills (30%)
+            "Transisi dari analyst ke engineer - pengalaman pribadi",
+            "Cara negotiate salary sebagai data professional",
+            "Portfolio project ideas untuk pemula",
+            "Networking tips untuk introvert di tech",
+            "Imposter syndrome di dunia data",
+            "Work-life balance sebagai data engineer",
+            
+            # Tech tapi Approachable (20%)
+            "Python pandas vs SQL - mana lebih cepat",
+            "Airflow vs cron job - kapan butuh Airflow",
+            "Docker basics untuk data engineer",
+            "API integration 101 untuk analyst",
+            "Machine learning buat non-ML engineer",
+            
+            # Trends tapi Praktis (10%)
+            "AI tools yang actually berguna untuk daily work",
+            "Cloud cost optimization dari pengalaman",
+            "Modern data stack di startup Indonesia",
+            "Remote work tools untuk data team"
         ]
 
-        # Select a random topic area
         selected_topic = random.choice(topics_sources)
-
         print(f"Selected topic area: {selected_topic}")
         return selected_topic
 
     def generate_post_with_ai(self, topic):
         """Use Groq AI to generate an engaging LinkedIn post"""
-        prompt = f"""You are a data science professional creating a LinkedIn post.
+        
+        prompt = f"""Anda adalah data engineer di Jakarta dengan 2-3 tahun pengalaman.
 
-Topic: {topic}
+Tech stack: SQL, Python, Airflow, Docker, MySQL
+Fokus: ETL pipelines, data visualization, business intelligence
 
-Create an engaging, professional LinkedIn post about this data science topic. The post should:
-- Be 150-300 words
-- Include practical insights or tips
-- Be conversational but professional
-- Include 3-5 relevant hashtags at the end
-- Have a hook that grabs attention in the first line
-- Provide value to data science professionals
+TASK: Buat LinkedIn post tentang "{topic}"
 
-Do not use emojis. Write the post directly without any meta-commentary or explanations."""
+STRUKTUR:
+1. HOOK (1 kalimat) - Pertanyaan atau statement menarik
+2. CONTEXT (2-3 kalimat) - Problem atau situasi dengan contoh konkret
+3. TIPS/INSIGHT (3-4 poin) - Actionable dan spesifik
+4. CLOSING (1 kalimat) - Call to action ringan atau pertanyaan
+5. HASHTAGS (3-5) - Relevan dengan data engineering
+
+RULES:
+- 150-250 kata
+- Casual profesional (bukan formal kaku)
+- Pakai contoh konkret, bukan teori
+- Target: data analyst/engineer 1-5 tahun experience
+- NO emoji
+- NO pembuka "Hi LinkedIn!"
+- NO sales pitch
+
+Langsung tulis post-nya tanpa meta-commentary."""
 
         response = self.groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Free, fast, and high-quality
+            model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "You are an expert data science professional who writes engaging LinkedIn content."},
+                {
+                    "role": "system", 
+                    "content": "You are a data engineer in Jakarta who writes authentic, practical LinkedIn content with real experiences and actionable insights."
+                },
                 {"role": "user", "content": prompt}
             ],
             max_tokens=1024,
-            temperature=0.7
+            temperature=0.8
         )
 
         post_content = response.choices[0].message.content.strip()
@@ -80,31 +102,62 @@ Do not use emojis. Write the post directly without any meta-commentary or explan
         return post_content
 
     def generate_image_prompts(self, topic, count=1):
-        """Generate multiple varied image description prompts for the topic"""
-        prompts = []
-
-        # Different angles for variety
-        angles = [
-            "Focus on data visualization, graphs, and analytics",
-            "Focus on technology, AI, and futuristic concepts",
-            "Focus on professionals working with data and collaboration"
+        """Generate image prompts using random combinations for variety"""
+        
+        # Subject/Main Object (10 options)
+        subjects = [
+            "laptop showing dashboard",
+            "office desk with computer",
+            "dual monitor setup",
+            "workspace with notebook",
+            "data visualization screen",
+            "modern workstation",
+            "desktop computer display",
+            "minimal desk setup",
+            "professional workspace",
+            "business analytics display"
         ]
-
-        for i, angle in enumerate(angles[:count], 1):
-            response = self.groq_client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": "You create concise image prompts for AI image generation."},
-                    {"role": "user", "content": f"Create a short, descriptive prompt (max 100 characters) for generating a professional, modern image about: {topic}. {angle}. No text in image."}
-                ],
-                max_tokens=100,
-                temperature=0.8
-            )
-
-            prompt = response.choices[0].message.content.strip().strip('"').strip("'")
+        
+        # Setting/Environment (10 options)
+        settings = [
+            "modern office",
+            "clean minimal style",
+            "bright natural lighting",
+            "professional environment",
+            "organized workspace",
+            "contemporary design",
+            "sleek modern aesthetic",
+            "bright office space",
+            "minimalist setting",
+            "corporate professional"
+        ]
+        
+        # Color/Style (10 options)
+        styles = [
+            "blue accent colors",
+            "orange and teal theme",
+            "neutral professional tones",
+            "dark elegant theme",
+            "bright vibrant colors",
+            "navy and white palette",
+            "gradient blue purple",
+            "warm earth tones",
+            "cool tech colors",
+            "clean white background"
+        ]
+        
+        prompts = []
+        for i in range(count):
+            # Random combination creates unique prompts
+            subject = random.choice(subjects)
+            setting = random.choice(settings)
+            style = random.choice(styles)
+            
+            # Combine into simple prompt
+            prompt = f"{subject}, {setting}, {style}, professional, no text"
             prompts.append(prompt)
-            print(f"Image prompt {i}: {prompt}")
-
+            print(f"Image prompt {i+1}: {prompt}")
+        
         return prompts
 
     def generate_images_with_pollinations(self, prompts):
@@ -279,11 +332,11 @@ Do not use emojis. Write the post directly without any meta-commentary or explan
             # Step 2: Generate post with AI
             post_content = self.generate_post_with_ai(topic)
 
-            # Step 3: Generate 3 different image prompts
+            # Step 3: Generate image prompts
             print("\n--- Generating Image Prompts ---")
-            image_prompts = self.generate_image_prompts(topic, count=3)
+            image_prompts = self.generate_image_prompts(topic, count=1)
 
-            # Step 4: Generate 3 images
+            # Step 4: Generate images
             print("\n--- Generating Images ---")
             image_paths = self.generate_images_with_pollinations(image_prompts)
 
